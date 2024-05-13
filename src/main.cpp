@@ -15,24 +15,6 @@
 
 int zipsystem = 0;
 
-#ifdef _WIN32
-bool zipprompt_triggered = false;
-void simulate_keypress() {
-    INPUT ip;
-    ip.type = INPUT_KEYBOARD;
-    ip.ki.wScan = 0; // hardware scan code for key
-    ip.ki.time = 0;
-    ip.ki.dwExtraInfo = 0;
-
-    // Press the "N" key
-    ip.ki.wVk =  0x4E; // virtual-key code for the "N" key
-    ip.ki.dwFlags = 0; // 0 for key press
-    SendInput(1, &ip, sizeof(INPUT));
-    ip.ki.wVk =  0x0D;
-    SendInput(1, &ip, sizeof(INPUT));
-}
-#endif
-
 int check7zip() {
     FILE* pipe = popen("7z", "r");
     if (pipe) {
@@ -83,10 +65,11 @@ int get_user_digit_count() {
             return digit_count;
         } else {
             std::cout << "Please enter a positive number." << std::endl;
+			int digit_count = 1;
+			std::cin >> digit_count;
         }
     }
 }
-
 int run_7z(std::string password, std::string path_to_file) {
     std::string command;
     if (zipsystem == 1) {
